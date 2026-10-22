@@ -19,6 +19,7 @@ export function createApp() {
     }),
   );
   app.use(express.json({ limit: "100kb" }));
+  app.use("/api/v1", IndexRoutes);
 
   app.get("/health", (_req, res) => {
     res.json({
