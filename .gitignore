@@ -9,3 +9,5 @@ api*
 /generated/prisma
 node_modules/
 dist/
+
+/generated/prisma
