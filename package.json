@@ -9,7 +9,7 @@
     "dev": "tsx watch src/server.ts",
     "lint": "eslint \"src/**/*.{ts,js}\"",
     "migrate": "prisma migrate dev",
-    "generate": "prisma generate",
+    "generate": "pnpm  prisma generate",
     "studio": "prisma studio",
     "push": "prisma db push",
     "pull": "prisma db pull",
