@@ -32,7 +32,7 @@ export const authLimiter = rateLimit({
 
 export const submissionLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5,
+  max: isProd ? 5 : 100,
   standardHeaders: "draft-7",
   legacyHeaders: false,
   keyGenerator: (req: Request) => req.user?.id ?? req.ip ?? "unknown",
