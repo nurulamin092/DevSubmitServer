@@ -48,8 +48,15 @@ export const submissionLimiter = rateLimit({
 
 export const reviewLimiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 30,
+  max: isProd ? 30 : 300,
   standardHeaders: "draft-7",
   legacyHeaders: false,
-  keyGenerator: (req: Request) => req.user?.id ?? req.ip ?? "unknown",
+  keyGenerator: (req) => req.user?.id ?? req.ip ?? "unknown",
+  message: {
+    success: false,
+    error: {
+      code: "TOO_MANY_REQUESTS",
+      message: "Review rate limit exceeded (max 30 per minute).",
+    },
+  },
 });
