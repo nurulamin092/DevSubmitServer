@@ -1,4 +1,4 @@
-import rateLimit from "express-rate-limit";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import type { Request } from "express";
 import { isProd } from "../config/env.js";
 
@@ -35,7 +35,8 @@ export const submissionLimiter = rateLimit({
   max: isProd ? 5 : 100,
   standardHeaders: "draft-7",
   legacyHeaders: false,
-  keyGenerator: (req: Request) => req.user?.id ?? req.ip ?? "unknown",
+  keyGenerator: (req: Request) =>
+    req.user?.id ?? ipKeyGenerator(req.ip ?? "0.0.0.0", 56),
   message: {
     success: false,
     error: {
@@ -51,7 +52,8 @@ export const reviewLimiter = rateLimit({
   max: isProd ? 30 : 300,
   standardHeaders: "draft-7",
   legacyHeaders: false,
-  keyGenerator: (req) => req.user?.id ?? req.ip ?? "unknown",
+  keyGenerator: (req) =>
+    req.user?.id ?? ipKeyGenerator(req.ip ?? "0.0.0.0", 56),
   message: {
     success: false,
     error: {
