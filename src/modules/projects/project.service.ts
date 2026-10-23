@@ -1,13 +1,12 @@
+import { Prisma } from "../../generated/prisma/browser.js";
 import { prisma } from "../../lib/prisma.js";
 import { ApiError } from "../../utils/ApiError.js";
-import type { CreateProjectInput } from "./project.schema.js";
 
-/**
- * Normalize repo URL for duplicate detection.
- * GitHub/GitLab/Bitbucket user/repo names are case-insensitive, so we lowercase
- * the path for those hosts. Trailing slash and query params stripped.
- * Stored value = normalized value (slight cosmetic loss, big safety gain).
- */
+import type {
+  CreateProjectInput,
+  ListProjectsQuery,
+  ReviewProjectInput,
+} from "./project.schema.js";
 function normalizeRepoUrl(raw: string): string {
   const trimmed = raw.trim();
   try {
@@ -98,4 +97,111 @@ export async function getMyProject(studentId: string) {
     throw ApiError.notFound("You have not submitted a project yet");
   }
   return project;
+}
+
+export async function listProjects(params: ListProjectsQuery) {
+  const { page, limit, status, search, sortBy, sortOrder } = params;
+
+  const where: Prisma.ProjectWhereInput = {
+    ...(status ? { status } : {}),
+    ...(search
+      ? {
+          OR: [
+            { name: { contains: search, mode: "insensitive" } },
+            { description: { contains: search, mode: "insensitive" } },
+            { student: { name: { contains: search, mode: "insensitive" } } },
+          ],
+        }
+      : {}),
+  };
+
+  const [items, total] = await Promise.all([
+    prisma.project.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { [sortBy]: sortOrder },
+      include: {
+        student: { select: { id: true, name: true, email: true } },
+        reviewedBy: { select: { id: true, name: true } },
+      },
+    }),
+    prisma.project.count({ where }),
+  ]);
+
+  return {
+    data: items,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages: Math.max(1, Math.ceil(total / limit)),
+      hasNext: page * limit < total,
+      hasPrev: page > 1,
+    },
+  };
+}
+
+// ---------------- Review (approve / reject) — race-safe ----------------
+export async function reviewProject(
+  projectId: string,
+  reviewerId: string,
+  input: ReviewProjectInput,
+) {
+  // Atomic update: only succeeds if status is still PENDING.
+  // Prevents two mentors reviewing the same project simultaneously.
+  const result = await prisma.project.updateMany({
+    where: { id: projectId, status: "PENDING" },
+    data: {
+      status: input.status,
+      rejectionReason:
+        input.status === "REJECTED" ? (input.rejectionReason ?? null) : null,
+      reviewedAt: new Date(),
+      reviewedById: reviewerId,
+    },
+  });
+
+  if (result.count === 0) {
+    // Distinguish "not found" from "already reviewed"
+    const existing = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { status: true },
+    });
+    if (!existing) throw ApiError.notFound("Project not found");
+    throw ApiError.conflict(
+      `Project already ${existing.status.toLowerCase()}; cannot re-review.`,
+    );
+  }
+
+  // Fetch full updated row with includes
+  const updated = await prisma.project.findUnique({
+    where: { id: projectId },
+    include: {
+      student: { select: { id: true, name: true, email: true } },
+      reviewedBy: { select: { id: true, name: true } },
+    },
+  });
+
+  // Should never be null (we just updated it), but TS wants the guard
+  if (!updated) throw ApiError.internal("Project disappeared after update");
+  return updated;
+}
+
+export async function stats() {
+  const grouped = await prisma.project.groupBy({
+    by: ["status"],
+    _count: { _all: true },
+  });
+
+  const counts = { PENDING: 0, APPROVED: 0, REJECTED: 0 };
+  for (const g of grouped) {
+    counts[g.status] = g._count._all;
+  }
+
+  return {
+    pending: counts.PENDING,
+    approved: counts.APPROVED,
+    rejected: counts.REJECTED,
+    total: counts.PENDING + counts.APPROVED + counts.REJECTED,
+  };
 }
