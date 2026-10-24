@@ -1,14 +1,21 @@
-node_modules
+# Dependencies
+node_modules/
+
+# Environment variables
 .env
 .env.*
 !.env.example
-dist
-api*
-/src/generated
-/generated/prisma
-generated/
-node_modules/
-dist/
-*.log
-.DS_Store
 
+# Build output
+dist/
+api/
+
+# Generated Prisma Client
+src/generated/
+generated/
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
