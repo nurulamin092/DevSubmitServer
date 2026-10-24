@@ -1,7 +1,7 @@
 import type { ErrorRequestHandler, RequestHandler } from "express";
 import { ZodError } from "zod";
-import { ApiError } from "../utils/api-error.js";
-import { isProd } from "../config/env.js";
+import { ApiError } from "../utils/api-error";
+import { isProd } from "../config/env";
 
 export const notFoundHandler: RequestHandler = (req, _res, next) => {
   next(ApiError.notFound(`Route ${req.method} ${req.originalUrl} not found`));

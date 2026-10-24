@@ -1,5 +1,5 @@
 import jwt, { type SignOptions } from "jsonwebtoken";
-import { env } from "../config/env.js";
+import { env } from "../config/env";
 
 export type JwtPayload = { sub: string; role: "STUDENT" | "MENTOR" | "ADMIN" };
 

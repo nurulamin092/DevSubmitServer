@@ -1,6 +1,6 @@
 import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import type { Request } from "express";
-import { isProd } from "../config/env.js";
+import { isProd } from "../config/env";
 
 const skipInDev = () => !isProd;
 

@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import { env } from "./config/env.js";
-import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
-import { globalLimiter } from "./middleware/rateLimit.js";
-import { IndexRoutes } from "./routes/index.js";
+import { env } from "./config/env";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
+import { globalLimiter } from "./middleware/rateLimit";
+import { IndexRoutes } from "./routes/index";
 
 export function createApp() {
   const app = express();

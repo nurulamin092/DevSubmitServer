@@ -1,6 +1,6 @@
-import { createApp } from "./app.js";
-import { env } from "./config/env.js";
-import { shutdownPrisma } from "./lib/prisma.js";
+import { createApp } from "./app";
+import { env } from "./config/env";
+import { shutdownPrisma } from "./lib/prisma";
 const app = createApp();
 
 const server = app.listen(env.PORT, () => {
