@@ -1,17 +1,14 @@
 import { Router } from "express";
-import { authenticate, requireRole } from "../../middleware/auth.js";
-import { validate } from "../../middleware/validate.js";
-import {
-  submissionLimiter,
-  reviewLimiter,
-} from "../../middleware/rateLimit.js";
+import { authenticate, requireRole } from "../../middleware/auth";
+import { validate } from "../../middleware/validate";
+import { submissionLimiter, reviewLimiter } from "../../middleware/rateLimit";
 import {
   createProjectSchema,
   listProjectsQuerySchema,
   reviewProjectSchema,
   projectIdParamSchema,
 } from "./project.schema.js";
-import * as ctrl from "./project.controller.js";
+import * as ctrl from "./project.controller";
 
 export const projectRouter = Router();
 

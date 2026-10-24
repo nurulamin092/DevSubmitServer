@@ -1,12 +1,12 @@
-import { Prisma } from "../../generated/prisma/browser.js";
-import { prisma } from "../../lib/prisma.js";
-import { ApiError } from "../../utils/api-error.js";
+import { Prisma } from "../../generated/prisma/browser";
+import { prisma } from "../../lib/prisma";
+import { ApiError } from "../../utils/api-error";
 
 import type {
   CreateProjectInput,
   ListProjectsQuery,
   ReviewProjectInput,
-} from "./project.schema.js";
+} from "./project.schema";
 function normalizeRepoUrl(raw: string): string {
   const trimmed = raw.trim();
   try {

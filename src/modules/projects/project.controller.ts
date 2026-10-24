@@ -1,8 +1,8 @@
 import type { RequestHandler } from "express";
-import { asyncHandler } from "../../utils/asyncHandler.js";
-import { ApiError } from "../../utils/api-error.js";
-import * as svc from "./project.service.js";
-import { ListProjectsQuery, ReviewProjectInput } from "./project.schema.js";
+import { asyncHandler } from "../../utils/asyncHandler";
+import { ApiError } from "../../utils/api-error";
+import * as svc from "./project.service";
+import { ListProjectsQuery, ReviewProjectInput } from "./project.schema";
 
 export const create: RequestHandler = asyncHandler(async (req, res) => {
   if (!req.user) throw ApiError.unauthorized();

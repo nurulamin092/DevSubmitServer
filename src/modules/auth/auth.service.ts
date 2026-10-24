@@ -1,5 +1,5 @@
-import { prisma } from "../../lib/prisma.js";
-import { ApiError } from "../../utils/api-error.js";
+import { prisma } from "../../lib/prisma";
+import { ApiError } from "../../utils/api-error";
 import { hashPassword, verifyPassword } from "../../utils/password";
 import { signAccessToken } from "../../utils/jwt";
 
