@@ -1,6 +1,6 @@
 import { Prisma } from "../../generated/prisma/browser.js";
 import { prisma } from "../../lib/prisma.js";
-import { ApiError } from "../../utils/ApiError.js";
+import { ApiError } from "../../utils/api-error.js";
 
 import type {
   CreateProjectInput,

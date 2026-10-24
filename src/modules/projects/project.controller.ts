@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 import { asyncHandler } from "../../utils/asyncHandler.js";
-import { ApiError } from "../../utils/ApiError.js";
+import { ApiError } from "../../utils/api-error.js";
 import * as svc from "./project.service.js";
 import { ListProjectsQuery, ReviewProjectInput } from "./project.schema.js";
 

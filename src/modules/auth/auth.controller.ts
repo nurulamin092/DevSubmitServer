@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
-import { ApiError } from "../../utils/ApiError";
+import { ApiError } from "../../utils/api-error.js";
 import * as svc from "./auth.service";
 
 export const register: RequestHandler = asyncHandler(async (req, res) => {

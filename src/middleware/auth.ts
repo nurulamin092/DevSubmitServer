@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 import { verifyAccessToken } from "../utils/jwt";
-import { ApiError } from "../utils/ApiError.js";
+import { ApiError } from "../utils/api-error.js";
 import type { Role } from "../generated/prisma/client";
 
 const ROLE_HIERARCHY: Record<Role, number> = {

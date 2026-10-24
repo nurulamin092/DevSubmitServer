@@ -1,6 +1,6 @@
 import type { ErrorRequestHandler, RequestHandler } from "express";
 import { ZodError } from "zod";
-import { ApiError } from "../utils/ApiError.js";
+import { ApiError } from "../utils/api-error.js";
 import { isProd } from "../config/env.js";
 
 export const notFoundHandler: RequestHandler = (req, _res, next) => {
